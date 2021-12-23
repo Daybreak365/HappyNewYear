@@ -1,0 +1,7 @@
+name: HappyNewYear
+main: me.breakofday.happynewyear.HappyNewYear
+version: ${project.version}
+commands:
+  hny:
+    description: Happy New Year
+api-version: 1.17
