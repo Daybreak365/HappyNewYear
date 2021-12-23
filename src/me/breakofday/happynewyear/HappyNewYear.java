@@ -13,6 +13,10 @@ import me.breakofday.happynewyear.util.TimeRemaining;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Instrument;
+import org.bukkit.Note;
+import org.bukkit.Note.Tone;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -127,6 +131,8 @@ public class HappyNewYear extends JavaPlugin implements Listener, CommandExecuto
 			private final DisplayBar displayBar = EnumGetter.getOrDefault(DisplayBar.class, Configuration.get(ConfigNodes.BAR_DISPLAY, String.class), DisplayBar.FORCE);
 			private final long sunsetDiff = getSunsetDiff();
 			private final Set<String> exceptedWorlds = new HashSet<>(Configuration.getList(ConfigNodes.TIME_INTERLOCK_EXCEPTED_WORLDS, String.class));
+			private final Note note = Note.flat(1, Tone.G);
+			private long lastSecond;
 
 			private long getSunsetDiff() {
 				final String sunset = Configuration.get(ConfigNodes.TIME_INTERLOCK_SUNSET, String.class);
@@ -163,6 +169,7 @@ public class HappyNewYear extends JavaPlugin implements Listener, CommandExecuto
 					for (Player player : Bukkit.getOnlinePlayers()) {
 						if (hid.contains(player.getUniqueId())) continue;
 						player.sendTitle(title, subTitle,30, 200, 30);
+						player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10f, 1.25f);
 					}
 
 					for (String cmd : Configuration.getList(ConfigNodes.COMMANDS_TO_RUN, String.class)) {
@@ -221,12 +228,16 @@ public class HappyNewYear extends JavaPlugin implements Listener, CommandExecuto
 							for (Player player : Bukkit.getOnlinePlayers()) {
 								if (hid.contains(player.getUniqueId())) continue;
 								player.sendTitle(title, subTitle,0, 30, 0);
+								if (this.lastSecond != time.getSeconds()) {
+									player.playNote(player.getLocation(), Instrument.BELL, note);
+								}
 							}
 						} else {
 							bossBar.setProgress(Math.min(Math.max(time.getRaw() / 60000.0, 0), 1.0));
 						}
 					}
 				}
+				this.lastSecond = time.getSeconds();
 			}
 		}.runTaskTimer(this, 0, 1);
 		for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
