@@ -5,4 +5,4 @@
 <br/>
 
 **📋 License**<br>
-[MIT License](https://github.com/DayBreak365/NerfedShield/blob/master/LICENSE)에 따라 자유롭게 이용할 수 있습니다.
+[MIT License](https://github.com/Daybreak365/HappyNewYear/blob/master/LICENSE.md)에 따라 자유롭게 이용할 수 있습니다.
